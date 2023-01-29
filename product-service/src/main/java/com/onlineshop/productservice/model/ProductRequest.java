@@ -1,0 +1,21 @@
+package com.onlineshop.productservice.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+import org.springframework.stereotype.Component;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Component
+public class ProductRequest {
+	private String name;
+    private String description;
+    private BigDecimal price;
+}
