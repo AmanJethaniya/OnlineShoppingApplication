@@ -1,6 +1,7 @@
 package com.onlineshop.orderservice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.onlineshop.orderservice.entity.OrderEntity;
 import com.onlineshop.orderservice.entity.OrderLineItemEntity;
+import com.onlineshop.orderservice.model.InventoryResponse;
 import com.onlineshop.orderservice.model.OrderLineItem;
 import com.onlineshop.orderservice.model.OrderRequest;
 import com.onlineshop.orderservice.repository.OrderRepository;
@@ -39,13 +41,15 @@ public class OrderServiceImpl implements OrderService {
 		order.setOrderLineItems(orderLineIteamEntity);
 		List<String> skuCodes = order.getOrderLineItems().stream().map(item->item.getSkuCode()).toList();
 		//Call inventory Service and place order if product is in stock
-		Boolean result = webClient.get()
+		InventoryResponse[] inventoryResponses = webClient.get()
 				 .uri("http:localhost:8082/api/inventory", uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
 				 .retrieve()
-				 .bodyToMono(Boolean.class)
+				 .bodyToMono(InventoryResponse[].class)
 				 .block();
+		//checking whether all the skuCode are in stock
+		Boolean allProductsInStock = Arrays.stream(inventoryResponses).allMatch(response -> response.isInStock());
 		
-		if(result) {
+		if(allProductsInStock) {
 			repository.save(order);
 		} else {
 			throw new IllegalArgumentException("Product is not in stock, please try again later");
