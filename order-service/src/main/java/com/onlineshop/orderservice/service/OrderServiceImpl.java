@@ -37,9 +37,10 @@ public class OrderServiceImpl implements OrderService {
 			orderLineIteamEntity.add(mapper.map(item, OrderLineItemEntity.class));
 		}
 		order.setOrderLineItems(orderLineIteamEntity);
+		List<String> skuCodes = order.getOrderLineItems().stream().map(item->item.getSkuCode()).toList();
 		//Call inventory Service and place order if product is in stock
 		Boolean result = webClient.get()
-				 .uri("http:localhost:8082/api/inventory")
+				 .uri("http:localhost:8082/api/inventory", uriBuilder -> uriBuilder.queryParam("skuCode", skuCodes).build())
 				 .retrieve()
 				 .bodyToMono(Boolean.class)
 				 .block();
