@@ -1,5 +1,7 @@
 package com.onlineshop.inventoryservice;
 
+import java.util.Arrays;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,11 +24,12 @@ public class InventoryServiceApplication {
 			inventory.setQuantity(100);
 			
 			InventoryEntity inventory1 = new InventoryEntity();
-			inventory.setSkuCode("iphone_13_red");
-			inventory.setQuantity(0);
+			inventory1.setSkuCode("iphone_13_red");
+			inventory1.setQuantity(0);
 			
-			inventoryRepository.save(inventory);
-			inventoryRepository.save(inventory1);
+//			inventoryRepository.save(inventory);
+//			inventoryRepository.save(inventory1);
+			inventoryRepository.saveAll(Arrays.asList(inventory,inventory1));
 		};
 	}
 

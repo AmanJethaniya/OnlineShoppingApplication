@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.onlineshop.inventoryservice.model.InventoryResponse;
 import com.onlineshop.inventoryservice.repository.InventoryRepository;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class InventoryServiceImpl implements InventoryService {
 	@Autowired
@@ -17,7 +19,7 @@ public class InventoryServiceImpl implements InventoryService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<InventoryResponse> isInStock(List<String> skuCode) {
-		// TODO Auto-generated method stub
+		log.info("Inside service layer, with skuCode value as {}", skuCode);
 		return repository.findBySkuCodeIn(skuCode).stream()
 				.map(inventory -> InventoryResponse.builder()
 						.skuCode(inventory.getSkuCode())

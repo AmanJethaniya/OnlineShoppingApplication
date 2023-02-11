@@ -14,16 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlineshop.inventoryservice.model.InventoryResponse;
 import com.onlineshop.inventoryservice.service.InventoryService;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/api/inventory")
 public class InventoryController {
 	@Autowired
 	private InventoryService service;
 	//http://localhost:8082/api/inventory?sku-code=iphone-13&sku-code=iphone13-red
-	@GetMapping()
+	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<InventoryResponse> isInStock(@RequestParam List<String> skuCode) {
-		return service.isInStock(skuCode);
+		log.info("Triggered isInStock, Inside inventory controller");
+		List<InventoryResponse> response = service.isInStock(skuCode);
+		log.info("Response received from service layer: {}", response);
+		return response;
 		
 	}
 }

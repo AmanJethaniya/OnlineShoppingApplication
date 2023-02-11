@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.onlineshop.orderservice.model.OrderRequest;
 import com.onlineshop.orderservice.service.OrderService;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("/api/order")
 public class OrderController {
@@ -17,6 +19,7 @@ public class OrderController {
 	
 	@PostMapping
 	public String placeOrder(@RequestBody OrderRequest orderRequest) {
+		log.info("Place order triggered, Inside controller");
 		service.placeOrder(orderRequest);
 		return "Order Placed successfully";
 		
