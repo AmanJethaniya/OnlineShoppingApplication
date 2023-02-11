@@ -52,10 +52,14 @@ public class OrderServiceImpl implements OrderService {
 			      .scheme("http").host("localhost:8082")
 			      .path("/api/inventory").query("skuCode={keyword}").buildAndExpand(String.join("&skuCode=", skuCodes));
 		log.info("performing rest operation on {}", uriComponents.toString());
-		ResponseEntity<InventoryResponse[]> inventoryResponses1 = template.getForEntity(uriComponents.toString(), InventoryResponse[].class);
+		ResponseEntity<InventoryResponse[]> inventoryResponses = template.getForEntity(uriComponents.toString(), InventoryResponse[].class);
 		//checking whether all the skuCode are in stock
-		log.info("Response received from inventory is {} ", inventoryResponses1.getBody());
-		Boolean allProductsInStock = Arrays.stream(inventoryResponses1.getBody()).allMatch(response -> response.isInStock());
+		InventoryResponse[] bodyOfResponse = inventoryResponses.getBody();
+		log.info("Response received from inventory is {} ", Arrays.asList(bodyOfResponse));
+		for(InventoryResponse response: bodyOfResponse) {
+			log.info("FOr sku {} is present {}", response.getSkuCode(),response.isInStock());	
+		}
+		Boolean allProductsInStock = Arrays.stream(bodyOfResponse).allMatch(response -> response.isInStock());
 		
 		if(allProductsInStock) {
 			repository.save(order);
