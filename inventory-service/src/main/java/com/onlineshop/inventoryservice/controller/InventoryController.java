@@ -25,7 +25,7 @@ public class InventoryController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<InventoryResponse> isInStock(@RequestParam List<String> skuCode) {
-		log.info("Triggered isInStock, Inside inventory controller");
+		log.info("Triggered isInStock, Inside inventory controller with URL {}", skuCode);
 		List<InventoryResponse> response = service.isInStock(skuCode);
 		log.info("Response received from service layer: {}", response);
 		return response;
