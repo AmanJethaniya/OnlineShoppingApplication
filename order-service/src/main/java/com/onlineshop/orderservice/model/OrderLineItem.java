@@ -16,5 +16,4 @@ public class OrderLineItem {
 	private String skuCode;
 	private BigDecimal price;
 	private  Integer quantity; 
-
 }
