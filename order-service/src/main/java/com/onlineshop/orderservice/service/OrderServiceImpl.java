@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private RestTemplate template;
 	@Override
-	public void placeOrder(OrderRequest orderRequest) {
+	public void placeOrder(OrderRequest orderRequest) throws Exception {
 		log.info("Inside service class..");
 		OrderEntity order = new OrderEntity();
 		order.setOrderNumber(UUID.randomUUID().toString());
@@ -52,7 +52,14 @@ public class OrderServiceImpl implements OrderService {
 			      .scheme("http").host("localhost:8082")
 			      .path("/api/inventory").query("skuCode={keyword}").buildAndExpand(String.join("&skuCode=", skuCodes));
 		log.info("performing rest operation on {}", uriComponents.toString());
-		ResponseEntity<InventoryResponse[]> inventoryResponses = template.getForEntity(uriComponents.toString(), InventoryResponse[].class);
+		ResponseEntity<InventoryResponse[]> inventoryResponses =null;
+		try {
+			inventoryResponses = template.getForEntity(uriComponents.toString(), InventoryResponse[].class);
+			
+		}catch (Exception e) {
+			log.error("Connection failed, check status of inventory service");
+			throw new Exception("Issue in connection");
+		}
 		//checking whether all the skuCode are in stock
 		InventoryResponse[] bodyOfResponse = inventoryResponses.getBody();
 		log.info("Response received from inventory is {} ", Arrays.asList(bodyOfResponse));
